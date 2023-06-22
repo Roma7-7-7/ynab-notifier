@@ -1,7 +1,27 @@
 package main
 
-import "fmt"
+import (
+	"flag"
+	"go.uber.org/zap"
+	stdLog "log"
+)
+
+var verbose = flag.Bool("debug", false, "debug output")
 
 func main() {
-	fmt.Println("Hello, World!")
+	flag.Parse()
+
+	var err error
+	var l *zap.Logger
+	if *verbose {
+		l, err = zap.NewDevelopment()
+	} else {
+		l, err = zap.NewProduction()
+	}
+	if err != nil {
+		stdLog.Fatalf("can't initialize zap logger: %v", err)
+	}
+	log := l.Sugar()
+
+	log.Infow("hello world", "foo", "bar")
 }
