@@ -1,4 +1,4 @@
-package ynab
+package ynab_test
 
 import (
 	"context"
@@ -11,6 +11,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
+
+	"github.com/Roma7-7-7/ynab-notifier/pkg/ynab"
 )
 
 func TestClient_GetCategory(t *testing.T) {
@@ -26,7 +28,7 @@ func TestClient_GetCategory(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    *Category
+		want    *ynab.Category
 		wantErr assert.ErrorAssertionFunc
 	}{
 		{
@@ -53,7 +55,7 @@ func TestClient_GetCategory(t *testing.T) {
 				budgetID:   "1234",
 				categoryID: "5678",
 			},
-			want: &Category{
+			want: &ynab.Category{
 				ID:       "7733",
 				Name:     "testName",
 				Budgeted: 100,
@@ -75,7 +77,7 @@ func TestClient_GetCategory(t *testing.T) {
 			},
 			want: nil,
 			wantErr: func(t assert.TestingT, err error, i ...interface{}) bool {
-				return assert.ErrorIsf(t, err, ErrForbidden, "GetCategory(ctx, %s, %s)", "1234", "5678")
+				return assert.ErrorIsf(t, err, ynab.ErrForbidden, "GetCategory(ctx, %s, %s)", "1234", "5678")
 			},
 		},
 		{
@@ -92,7 +94,7 @@ func TestClient_GetCategory(t *testing.T) {
 			},
 			want: nil,
 			wantErr: func(t assert.TestingT, err error, i ...interface{}) bool {
-				return assert.ErrorIsf(t, err, ErrNotFound, "GetCategory(ctx, %s, %s)", "1234", "5678")
+				return assert.ErrorIsf(t, err, ynab.ErrNotFound, "GetCategory(ctx, %s, %s)", "1234", "5678")
 			},
 		},
 	}
@@ -101,7 +103,7 @@ func TestClient_GetCategory(t *testing.T) {
 			server := httptest.NewServer(tt.fields.handlerFunc)
 			defer server.Close()
 
-			c := NewClient(server.URL, tt.fields.token, zap.NewNop().Sugar())
+			c := ynab.NewClient(server.URL, tt.fields.token, zap.NewNop().Sugar())
 			got, err := c.GetCategory(context.Background(), tt.args.budgetID, tt.args.categoryID)
 			if !tt.wantErr(t, err, fmt.Sprintf("GetCategory(ctx, %s, %s)", tt.args.budgetID, tt.args.categoryID)) {
 				return
@@ -115,7 +117,7 @@ func TestClient_Manual(t *testing.T) {
 	t.Skipf("for manual run only")
 
 	log, _ := zap.NewDevelopment()
-	c := NewClient("https://api.ynab.com", os.Getenv("YNAB_ACCESS_TOKEN"), log.Sugar())
+	c := ynab.NewClient("https://api.ynab.com", os.Getenv("YNAB_ACCESS_TOKEN"), log.Sugar())
 
 	t.Run("GetCategory", func(t *testing.T) {
 		res, err := c.GetCategory(context.Background(), os.Getenv("YNAB_BUDGET_ID"), os.Getenv("YNAB_CATEGORY_ID"))

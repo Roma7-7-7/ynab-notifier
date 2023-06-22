@@ -31,7 +31,7 @@ type Category struct {
 type categoryResponse struct {
 	Data struct {
 		Category Category `json:"category"`
-	}
+	} `json:"data"`
 }
 
 type Client struct {
