@@ -2,8 +2,9 @@ package main
 
 import (
 	"flag"
-	"go.uber.org/zap"
 	stdLog "log"
+
+	"go.uber.org/zap"
 )
 
 var verbose = flag.Bool("debug", false, "debug output")
