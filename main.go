@@ -7,20 +7,20 @@ import (
 	"go.uber.org/zap"
 )
 
-var verbose = flag.Bool("debug", false, "debug output")
+var debug = flag.Bool("debug", false, "debug mode")
 
 func main() {
 	flag.Parse()
 
 	var err error
 	var l *zap.Logger
-	if *verbose {
+	if *debug {
 		l, err = zap.NewDevelopment()
 	} else {
 		l, err = zap.NewProduction()
 	}
 	if err != nil {
-		stdLog.Fatalf("can't initialize zap logger: %v", err)
+		stdLog.Fatalf("can't initialize  zap logger: %v", err)
 	}
 	log := l.Sugar()
 

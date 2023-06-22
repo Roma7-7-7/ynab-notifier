@@ -9,4 +9,4 @@ test:
 
 # Build
 build:
-	go build -o bin/ ./...
+	go build -o bin/app
