@@ -7,9 +7,9 @@ import (
 	"go.uber.org/zap"
 )
 
-var debug = flag.Bool("debug", false, "debug mode")
-
 func main() {
+	var debug = flag.Bool("debug", false, "debug mode")
+
 	flag.Parse()
 
 	var err error
