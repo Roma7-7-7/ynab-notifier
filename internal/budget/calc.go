@@ -9,6 +9,10 @@ import (
 	"github.com/Roma7-7-7/ynab-notifier/pkg/ynab"
 )
 
+const ten = 10
+const tenFloat = float64(10)
+const hundred = 100
+
 type GeneralCategoryStatistic struct {
 	Budgeted     int
 	Activity     int
@@ -63,9 +67,9 @@ func CalculateAvgLeft(c ynab.Category, date time.Time) int {
 	return avgSpent
 }
 
-// FormatMoney format money in cents to string like "123,456.78"
+// FormatMoney format money in cents to string like "123,456.78".
 //
-// Note: there are 3 cents at the end of value because of YNAB API
+// Note: there are 3 cents at the end of value because of YNAB API.
 func FormatMoney(money int) string {
 	if money == 0 {
 		return "0.00"
@@ -75,13 +79,13 @@ func FormatMoney(money int) string {
 		pref = "-"
 		money = -money
 	}
-	if money < 10 {
+	if money < ten {
 		return pref + "0.01"
 	}
-	money = int(math.Round(float64(money) / float64(10)))
+	money = int(math.Round(float64(money) / tenFloat))
 
-	primaryStr := strconv.Itoa(money / 100)
-	cents := money % 100
+	primaryStr := strconv.Itoa(money / hundred)
+	cents := money % hundred
 
 	// Add comma between thousands
 	primary := ""

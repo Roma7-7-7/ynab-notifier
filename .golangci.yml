@@ -314,3 +314,4 @@ issues:
         - noctx
         - wrapcheck
         - errcheck
+        - lll

@@ -1,9 +1,10 @@
-package budget
+package budget_test
 
 import (
 	"testing"
 	"time"
 
+	"github.com/Roma7-7-7/ynab-notifier/internal/budget"
 	"github.com/Roma7-7-7/ynab-notifier/pkg/ynab"
 )
 
@@ -119,10 +120,10 @@ func TestFormatMoney(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := FormatMoney(tt.arg); got != tt.wantPositive {
+			if got := budget.FormatMoney(tt.arg); got != tt.wantPositive {
 				t.Errorf("FormatMoney() = %v, want positive %v", got, tt.wantPositive)
 			}
-			if got := FormatMoney(-tt.arg); got != tt.wantNegative {
+			if got := budget.FormatMoney(-tt.arg); got != tt.wantNegative {
 				t.Errorf("FormatMoney() = %v, want negative %v", got, tt.wantNegative)
 			}
 		})
@@ -260,11 +261,10 @@ func TestCalculateAvgSpentAndCalculateAvgLeft(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := CalculateAvgSpent(tt.args.c, tt.args.time); got != tt.wantSpent {
+			if got := budget.CalculateAvgSpent(tt.args.c, tt.args.time); got != tt.wantSpent {
 				t.Errorf("CalculateAvgSpent() = %v, wantSpent %v", got, tt.wantSpent)
-
 			}
-			if got := CalculateAvgLeft(tt.args.c, tt.args.time); got != tt.wantLeft {
+			if got := budget.CalculateAvgLeft(tt.args.c, tt.args.time); got != tt.wantLeft {
 				t.Errorf("CalculateAvgLeft() = %v, want %v", got, tt.wantLeft)
 			}
 		})
