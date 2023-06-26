@@ -48,7 +48,7 @@ func TestClient_GetCategory(t *testing.T) {
 					}
 
 					w.WriteHeader(http.StatusOK)
-					w.Write([]byte(`{"data": {"category": {"id": "7733", "name": "testName", "budgeted": 100, "activity": -50}}}`))
+					w.Write([]byte(`{"data": {"category": {"id": "7733", "name": "testName", "budgeted": 100, "activity": -60, "balance": 40}}}`))
 				},
 			},
 			args: args{
@@ -59,7 +59,8 @@ func TestClient_GetCategory(t *testing.T) {
 				ID:       "7733",
 				Name:     "testName",
 				Budgeted: 100,
-				Activity: -50,
+				Activity: -60,
+				Balance:  40,
 			},
 			wantErr: assert.NoError,
 		},

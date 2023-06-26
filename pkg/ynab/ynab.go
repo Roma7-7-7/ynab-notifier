@@ -26,6 +26,7 @@ type Category struct {
 	Name     string `json:"name"`
 	Budgeted int    `json:"budgeted"`
 	Activity int    `json:"activity"`
+	Balance  int    `json:"balance"`
 }
 
 type categoryResponse struct {
