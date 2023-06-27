@@ -14,9 +14,9 @@ type extendedStatistic struct {
 
 func (s extendedStatistic) DaysLeftS() string {
 	switch s.DaysLeft {
-	case 1, 21, 31:
+	case 1, 21, 31: //nolint: gomnd // 1, 21, 31 день
 		return fmt.Sprintf("%d день", s.DaysLeft)
-	case 2, 3, 4, 22, 23, 24:
+	case 2, 3, 4, 22, 23, 24: //nolint: gomnd // 2, 3, 4, 22, 23, 24 дні
 		return fmt.Sprintf("%d дні", s.DaysLeft)
 	default:
 		return fmt.Sprintf("%d днів", s.DaysLeft)
