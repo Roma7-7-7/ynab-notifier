@@ -19,6 +19,7 @@ type GeneralCategoryStatistic struct {
 	Balance      int
 	AvgSpent     int
 	AvgSpentLeft int
+	DaysLeft     int
 }
 
 func (s GeneralCategoryStatistic) BudgetedS() string {
@@ -42,12 +43,14 @@ func (s GeneralCategoryStatistic) AvgSpentLeftS() string {
 }
 
 func CalculateStatistic(c ynab.Category) GeneralCategoryStatistic {
+	today := time.Now()
 	return GeneralCategoryStatistic{
 		Budgeted:     c.Budgeted,
 		Activity:     c.Activity,
 		Balance:      c.Balance,
-		AvgSpent:     CalculateAvgSpent(c, time.Now()),
-		AvgSpentLeft: CalculateAvgLeft(c, time.Now()),
+		AvgSpent:     CalculateAvgSpent(c, today),
+		AvgSpentLeft: CalculateAvgLeft(c, today),
+		DaysLeft:     daysLeft(today),
 	}
 }
 
@@ -60,11 +63,7 @@ func CalculateAvgSpent(c ynab.Category, date time.Time) int {
 }
 
 func CalculateAvgLeft(c ynab.Category, date time.Time) int {
-	dayOfMonth := date.Day()
-	daysInMonth := time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.UTC).
-		AddDate(0, 1, 0).AddDate(0, 0, -1).Day()
-	avgSpent := c.Balance / (daysInMonth - dayOfMonth + 1)
-	return avgSpent
+	return c.Balance / (daysInMonth(date) - date.Day() + 1)
 }
 
 // FormatMoney format money in cents to string like "123,456.78".
@@ -97,4 +96,13 @@ func FormatMoney(money int) string {
 	}
 
 	return fmt.Sprintf("%s%s.%02d", pref, primary, cents)
+}
+
+func daysInMonth(date time.Time) int {
+	return time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.UTC).
+		AddDate(0, 1, 0).AddDate(0, 0, -1).Day()
+}
+
+func daysLeft(date time.Time) int {
+	return daysInMonth(date) - date.Day() + 1
 }

@@ -30,6 +30,9 @@ type Bot struct {
 	ynabClient     YNABClient
 	msgFormatter   StatisticMessageFormatter
 
+	markup   *tb.ReplyMarkup
+	stateBtn *tb.Btn
+
 	log Logger
 }
 
@@ -51,6 +54,7 @@ func NewBot(deps Dependencies) *Bot {
 	for _, chatID := range deps.AllowedChats {
 		chatIDs[chatID] = struct{}{}
 	}
+	markup, btn := newMarkups()
 
 	return &Bot{
 		chatIDs: chatIDs,
@@ -58,6 +62,9 @@ func NewBot(deps Dependencies) *Bot {
 		ynabBudgetID:   deps.YNAB.BudgetID,
 		ynabCategoryID: deps.YNAB.CategoryID,
 		ynabClient:     deps.YNAB.Client,
+
+		markup:   markup,
+		stateBtn: btn,
 
 		msgFormatter: deps.StatisticMessageFormatter,
 
@@ -70,6 +77,7 @@ func (b *Bot) Start(bot *tb.Bot) {
 
 	bot.Handle("/start", b.stateHandler)
 	bot.Handle("/state", b.stateHandler)
+	bot.Handle(b.stateBtn, b.stateHandler)
 
 	bot.Start()
 }
@@ -100,7 +108,7 @@ func (b *Bot) stateHandler(c tb.Context) error {
 }
 
 func (b *Bot) sendWithErrorLogging(c tb.Context, msg string) error {
-	if err := c.Send(msg); err != nil {
+	if err := c.Send(msg, b.markup); err != nil {
 		b.log.Errorw("failed to send message", "chatID", c.Chat().ID, "error", err)
 		return err
 	}
@@ -123,4 +131,15 @@ func AllowedChatsMiddleware(chatIDs map[int64]struct{}, log Logger) func(next tb
 			return next(c)
 		}
 	}
+}
+
+func newMarkups() (*tb.ReplyMarkup, *tb.Btn) {
+	markup := &tb.ReplyMarkup{}
+
+	btn := markup.Data("Стан", "state")
+	markup.Inline(
+		markup.Row(btn),
+	)
+
+	return markup, &btn
 }
