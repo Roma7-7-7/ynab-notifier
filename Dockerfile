@@ -2,11 +2,10 @@ FROM golang:1.20 AS build
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+COPY ./ ./
 RUN go mod download
 
-COPY *.go ./
-RUN CGO_ENABLED=0 go build -o /go/bin/app
+RUN CGO_ENABLED=0 go build -o /go/bin/app ./cmd/ynabnotifier/ynabnotifier.go
 
 FROM alpine AS run
 

@@ -50,7 +50,7 @@ func CalculateStatistic(c ynab.Category) GeneralCategoryStatistic {
 		Balance:      c.Balance,
 		AvgSpent:     CalculateAvgSpent(c, today),
 		AvgSpentLeft: CalculateAvgLeft(c, today),
-		DaysLeft:     daysLeft(today),
+		DaysLeft:     DaysLeft(today),
 	}
 }
 
@@ -98,11 +98,11 @@ func FormatMoney(money int) string {
 	return fmt.Sprintf("%s%s.%02d", pref, primary, cents)
 }
 
+func DaysLeft(date time.Time) int {
+	return daysInMonth(date) - date.Day()
+}
+
 func daysInMonth(date time.Time) int {
 	return time.Date(date.Year(), date.Month(), 1, 0, 0, 0, 0, time.UTC).
 		AddDate(0, 1, 0).AddDate(0, 0, -1).Day()
-}
-
-func daysLeft(date time.Time) int {
-	return daysInMonth(date) - date.Day() + 1
 }
