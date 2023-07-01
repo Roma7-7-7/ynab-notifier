@@ -270,3 +270,85 @@ func TestCalculateAvgSpentAndCalculateAvgLeft(t *testing.T) {
 		})
 	}
 }
+
+func TestDaysLeft(t *testing.T) {
+	type args struct {
+		date time.Time
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{
+			"first_day_of_january",
+			args{
+				date: time.Date(2023, time.January, 1, 0, 0, 0, 0, time.UTC),
+			},
+			30,
+		},
+		{
+			"middle_day_of_january",
+			args{
+				date: time.Date(2023, time.January, 15, 0, 0, 0, 0, time.UTC),
+			},
+			16,
+		},
+		{
+			"last_day_of_january",
+			args{
+				date: time.Date(2023, time.January, 31, 0, 0, 0, 0, time.UTC),
+			},
+			0,
+		},
+		{
+			"first_day_of_february_2023",
+			args{
+				date: time.Date(2023, time.February, 1, 0, 0, 0, 0, time.UTC),
+			},
+			27,
+		},
+		{
+			"middle_day_of_february_2023",
+			args{
+				date: time.Date(2023, time.February, 15, 0, 0, 0, 0, time.UTC),
+			},
+			13,
+		},
+		{
+			"last_day_of_february_2023",
+			args{
+				date: time.Date(2023, time.February, 28, 0, 0, 0, 0, time.UTC),
+			},
+			0,
+		},
+		{
+			"first_day_of_february_2024",
+			args{
+				date: time.Date(2024, time.February, 1, 0, 0, 0, 0, time.UTC),
+			},
+			28,
+		},
+		{
+			"middle_day_of_february_2024",
+			args{
+				date: time.Date(2024, time.February, 15, 0, 0, 0, 0, time.UTC),
+			},
+			14,
+		},
+		{
+			"last_day_of_february_2024",
+			args{
+				date: time.Date(2024, time.February, 29, 0, 0, 0, 0, time.UTC),
+			},
+			0,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := budget.DaysLeft(tt.args.date); got != tt.want {
+				t.Errorf("DaysLeft() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
